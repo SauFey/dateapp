@@ -1,0 +1,12 @@
+User Stories (Simulera användarflöden)
+
+En medlem registerar sig
+
+En medlem vill skapa sin profil
+
+En medlem vill välja sina intressen
+
+En medlem vill bläddra bland sina profiler
+
+En medlem vill skicka ett privat meddelande till en annan medlem
+
