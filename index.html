@@ -1,0 +1,42 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="module" src="script.js" defer></script>
+
+    <title>Meeter</title>
+
+    <style>
+    </style>
+</head>
+<body>
+    <h1>Välkommen till Meeter</h1>
+    <p>Din nya mötesplats för kvinnor som vill träffa kvinnor</p>
+    <button onclick="showAlert()">Click Me</button>
+
+    <h2>Bli medlem</h2>
+    <input type="text" id="regName" placeholder="Användarnamn" />
+    <input type="password" id="regPassword" placeholder="Lösenord" />
+    <button onclick="handleRegister()">Registrera</button>
+
+    <h2>Logga in</h2>
+    <input type="text" id="loginName" placeholder="Användarnamn" />
+    <input type="password" id="loginPassword" placeholder="Lösenord" />
+    <button onclick="handleLogin()">Logga in</button>
+
+    <h2>Profilbild</h2>
+    <input type="file" id="profilePic" accept="image/*" placeholder="Bild-URL" />
+    <button onclick="uploadProfilePic()">Ladda upp bild</button>
+    <div id="profilePicPreview"></div>
+
+    <h2>Swipe</h2>
+    <button onclick="showIceBreaker()">Visa fråga</button>
+    <p id="iceBreakerQuestion"></p>
+    
+</body>
+
+<script type="module" src="script.js"></script>
+<script type="text/javascript" src="script.js"></script>
+
+</html>
