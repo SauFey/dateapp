@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>LunaRoom Chat</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #ffe4f0; padding: 2rem; }
+    #chat { border: 2px solid #e91e63; padding: 1rem; border-radius: 20px; max-width: 600px; margin: auto; background: white; }
+    #messages { height: 250px; overflow-y: auto; margin-bottom: 1rem; }
+    input, textarea, button, select {
+      padding: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin: 0.2rem;
+      width: 100%;
+    }
+    textarea { resize: none; height: 60px; }
+  </style>
+</head>
+<body>
+  <div id="chat">
+    <h2 id="welcome">Välkommen till LunaRoom 💬</h2>
+    <p id="roomInfo">Du är nu i Global-rummet</p>
+
+    <div id="messages"></div>
+
+    <textarea id="message" placeholder="Skriv ett meddelande..."></textarea>
+    <button onclick="sendMessage()">Skicka</button>
+  </div>
+
+  <script>
+    const nickname = localStorage.getItem('username') || 'vän';
+    document.getElementById('welcome').innerText = `Välkommen, ${nickname} 💜`;
+
+    const socket = io();
+    const room = 'Global';
+
+    socket.emit('joinRoom', { room, nickname });
+
+    socket.on('message', data => {
+      const msg = document.createElement('p');
+      msg.innerHTML = `<strong>${data.user}:</strong> ${data.text}`;
+      document.getElementById('messages').appendChild(msg);
+      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    });
+
+    document.getElementById('message').addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      const text = document.getElementById('message').value.trim();
+      if (!text) return;
+      socket.emit('chatMessage', { user: nickname, text });
+      document.getElementById('message').value = '';
+    }
+  </script>
+</body>
+</html>

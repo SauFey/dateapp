@@ -1,29 +1,46 @@
-import mysql from 'mysql2/promise';
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
+const cors = require('cors');
+const http = require('http');
+const open = require('open');
+const { Server } = require('socket.io');
+const express = require('express');
+const path = require('path');
 
-// Create an Express application
-const app = express();
+// Detta gör att Express serverar statiska filer från "public"-mappen
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware
-app.use(bodyParser.json());
-app.use(cors());
-app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-app.set('views', './views');
-
-// Database connection
-const dbConfig = {
-    host: 'localhost'}
-const pool = mysql.createPool(dbConfig);
-
-const db = await mysql.createConnection({
-    host: 'localhost',
-    port: 3306, // Default MySQL port
-    user: 'yourusername',
-    password: 'yourpassword',
-    database: 'dating_app'
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+io.on('connection', socket => {
+  console.log('En användare anslöt');
+
+  socket.on('joinRoom', ({ room, nickname }) => {
+    socket.join(room);
+    socket.room = room;
+    socket.nickname = nickname;
+
+    io.to(room).emit('message', {
+      user: '🌙 LunaBot',
+      text: `${nickname} har gått med i ${room}`
+    });
+  });
+
+  socket.on('chatMessage', data => {
+    io.to(socket.room).emit('message', {
+      user: data.user,
+      text: data.text
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Användare lämnade');
+  });
+});
+
+server.listen(0, () => {
+    const adress = server.address();
+    const url = `http://localhost:${adress.port}`;
+    console.log(`Servern körs på ${url}`);
+    open(url); //Öppnar webbläsaren automatiskt
+});
