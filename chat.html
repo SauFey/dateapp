@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="style.css" href="style.css">
+    <script type="module" src="script.js" defer></script>
+
+    <title>LunaRoom</title>
+</head>
+<body>
+    <div class="container">
+    <h1>Välkommen till LunaRoom's chatt</h1>
+    <div id="chatContainer">
+     <div id="login">
+       <input type="text" id="nickname" placeholder="Ditt nickname..." />
+       <button onclick="startChat()">Börja Chatta</button>
+     </div>
+
++    <ul id="postList"></ul>
+
+        <form id="postForm">
+        <input type="text" id="postInput" placeholder="Skriv något..." required />
+        <button type="submit">Publicera</button>
+        </form>
+    </div>
+    
+    <button onclick="showAlert()">Click Me</button>
+
+</body>
+</html>

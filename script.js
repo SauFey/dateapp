@@ -1,4 +1,40 @@
-## // 🧍 Skapa användarprofil
+const form = document.getElementById('postForm');
+const input = document.getElementById('postInput');
+if username.username document.getElementById('nickname').value = username.username;
+const list = document.getElementById('postList');
+const welcome = document.getElementById('welcome');
+
+// Hämta användarnamn
+const username = localStorage.getItem('username');
+if (username && welcome) {
+  welcome.textContent = `Hej ${username}, välkommen tillbaka!`;
+}
+
+// Ladda tidigare inlägg från LocalStorage
+const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+savedPosts.forEach(text => {
+  const li = document.createElement('li');
+  li.textContent = text;
+  list.appendChild(li);
+});
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (text) {
+    const li = document.createElement('li');
+    li.textContent = text;
+    list.appendChild(li);
+
+    // Spara till LocalStorage
+    savedPosts.push(text);
+    localStorage.setItem('posts', JSON.stringify(savedPosts));
+
+    input.value = '';
+  }
+});
+
+// 🧍 Skapa användarprofil
 function createUserProfile(name, age, gender, interests) {
   return {
     name,
@@ -10,7 +46,7 @@ function createUserProfile(name, age, gender, interests) {
   };
 }
 
-## // 🔐 Registrering och inloggning
+// 🔐 Registrering, inloggning, utloggning
 function registerUser(username, password) {
   const user = { username, password };
   localStorage.setItem('user_' + username, JSON.stringify(user));
@@ -25,14 +61,19 @@ function loginUser(username, password) {
   return user.password === password;
 }
 
-## // 🖼️ Profilbild
+function logout() {
+  localStorage.removeItem('username');
+  window.location.href = 'login.html';
+}
+
+// 🖼️ Profilbild
 function addProfilePicture(user, imageUrl) {
   user.profilePicture = imageUrl;
   console.log(user.name + ' har lagt till en profilbild.');
 }
 
 
-## // 📝 Uppdatera profil
+// 📝 Uppdatera profil
 function updateProfile(username, newInfo) {
   const storedUser = localStorage.getItem('user_' + username);
   if (!storedUser) return false;
@@ -42,7 +83,7 @@ function updateProfile(username, newInfo) {
   console.log(username + ' har uppdaterat sin profil.');
 }
 
-## // 💘 Matchning
+// 💘 Matchning
 function findMatches(user, potentialMatches) {
   return potentialMatches.filter(match => {
     const sharedInterests = user.interests.filter(interest =>
@@ -59,12 +100,12 @@ function displayMatches(user) {
   });
 }
 
-## // 📬 Meddelanden
+// 📬 Meddelanden
 function sendMessage(sender, receiver, message) {
   console.log('Message from ${sender.name} to ${receiver.name}: ${message}');
 }
 
-## // 🔍 Filtrera användare
+// 🔍 Filtrera användare
 function filterUsers(users, minAge, maxAge, gender) {
   return users.filter(user =>
     user.age >= minAge &&
@@ -73,7 +114,7 @@ function filterUsers(users, minAge, maxAge, gender) {
   );
 }
 
-## // 🎲 Isbrytare
+// 🎲 Isbrytare
 function getIceBreaker() {
   const questions = [
     "Om du fick resa vart som helst just nu, vart skulle du åka?",
@@ -92,7 +133,7 @@ function getIceBreaker() {
   return questions[index];
 }
 
-## // 👉 Swipe-funktion
+// 👉 Swipe-funktion
 function swipe(user, potentialMatch, direction) {
   if (direction === 'right') {
     user.matches.push(potentialMatch.name);
@@ -102,7 +143,7 @@ function swipe(user, potentialMatch, direction) {
   }
 }
 
-## // 💾 Lagring
+// 💾 Lagring
 function saveProfile(user) {
   localStorage.setItem('profile_' + user.name, JSON.stringify(user));
 }
@@ -117,11 +158,11 @@ function clearProfiles() {
   console.log("Alla profiler har raderats.");
 }
 
-## // 🌍 Globala användare
+// 🌍 Globala användare
 let currentUser = null;
 let potentialMatch = createUserProfile("Alex", 34, "male", ["resor", "träning", "mat"]);
 
-## // 🖱️ DOM-händelser
+// 🖱️ DOM-händelser
 window.handleRegister = function () {
   const name = document.getElementById("regName").value;
   const pass = document.getElementById("regPass").value;

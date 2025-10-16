@@ -2,19 +2,182 @@
   margin: 0;
   padding: 24px;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
-  background: #4F1271;
+  background: #e4a0cf;
   border-radius: 16px;
   box-shadow: 0 10px 30px #0004;
   border: 1px solid #1f2a44;
   min-height: calc(100vh - 100px);
   display: flex;
+  justify-content: center;
   flex-direction: column;
+  height: 100vh;
   gap: 32px; /* Ger luft mellan header och tabell */
   color: #e7eefc; /* Din önskade textfärg */
 }
 
 body, html {
-  background: #4F1271 !important;
+  background: #e4a0cf !important;
+}
+
+.container {
+  text-align: center;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 1rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+  padding: 10px 10px;
+  border-bottom: 1px solid #1f2a44;
+  position: sticky;
+  top: 0;
+  background: #4F1271;
+  backdrop-filter: blur(6px);
+  z-index: 5;
+  color: #e7eefc; /* Din önskade textfärg */
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #555; /* Din önskade textfärg */
+}
+
+
+.chat-entry {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto 1rem;
+  border: 2px solid #4F1271;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.chat-entry input {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  border-radius: 0;
+}
+
+.chat-entry button {
+  padding: 0.6rem 1rem;
+  background-color: #4F1271;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background-color 0.3s ease;
+}
+
+.chat-entry button:hover {
+  background-color: #9750bd;
+}
+
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 25px;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+input {
+  flex: 1;
+  max-width: 300px;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+input:focus {
+  box-shadow: 0 0 5px rgba(233, 30, 99, 0.5);
+}
+
+.register-group {
+  margin-top: 1rem;
+}
+
+button {
+  width: 10rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background: #4F1271;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.bchat {
+  width: 10rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background: #e8ebe8;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.net-button button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  background-color: #4F1271;
+  color: white;
+  border: none;
+  width: 100%;
+  max-width: 500px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px 5px rgba(233, 30, 99, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.4);
+  }
+}
+
+
+.net-button:hover {
+  background: #9750bd;
+}
+
+
+button:hover {
+  background: #9750bd;
 }
 
 .body header {
@@ -46,18 +209,6 @@ body, html {
   padding-bottom: 40px;
 }
 
-header {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
-  padding: 10px 10px;
-  border-bottom: 1px solid #1f2a44;
-  position: sticky;
-  top: 0;
-  background: #4F1271;
-  backdrop-filter: blur(6px);
-  z-index: 5;
-  color: #e7eefc; /* Din önskade textfärg */
-}
-
 .meta-dl {
   margin: 0;
   padding: 10px;
@@ -76,14 +227,11 @@ header {
   word-break: break-word;
 }
 
-
 .layout-container {
   padding: 20px;
   max-width: 1200px;
   margin: auto;
 }
-
-
 
 .result-card {
   padding: 20px;
@@ -93,7 +241,6 @@ header {
   box-shadow: 0 4px 16px #0002;
   border: 1px solid #1e2a44;
 }
-
 
 .layout {
   width: 90%;

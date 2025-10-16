@@ -1,42 +1,44 @@
-<html>
+<!DOCTYPE html>
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="style.css" />
     <script type="module" src="script.js" defer></script>
 
-    <title>Meeter</title>
-
-    <style>
-    </style>
+    <title>LunaRoom</title>
 </head>
 <body>
-    <h1>Välkommen till Meeter</h1>
-    <p>Din nya mötesplats för kvinnor som vill träffa kvinnor</p>
-    <button onclick="showAlert()">Click Me</button>
+<p id="welcome"></p>
+  <div class="container">
+    <img src="heartlogo.png" alt="LunaRoom Logo" class="logo" />
+    <h1>Välkommen till LunaRoom</h1>
+    <p>En trygg mötesplats för kvinnor som älskar kvinnor - chatta, connecta och dejta.</p>
 
-    <h2>Bli medlem</h2>
-    <input type="text" id="regName" placeholder="Användarnamn" />
-    <input type="password" id="regPassword" placeholder="Lösenord" />
-    <button onclick="handleRegister()">Registrera</button>
+    <div class="chat-entry">
+      <input type="text" id="nickname" placeholder="Skriv ditt namn här" />
+      <button onclick="enterChat()">Börja Chatta</button>
+    </div>
 
-    <h2>Logga in</h2>
-    <input type="text" id="loginName" placeholder="Användarnamn" />
-    <input type="password" id="loginPassword" placeholder="Lösenord" />
-    <button onclick="handleLogin()">Logga in</button>
+    <div class="net-button">
+      <button onclick="window.location.href='register.html'">eller gå med i nätverket och börja dejta nu!</button>
+    </div>
+  </div>
 
-    <h2>Profilbild</h2>
-    <input type="file" id="profilePic" accept="image/*" placeholder="Bild-URL" />
-    <button onclick="uploadProfilePic()">Ladda upp bild</button>
-    <div id="profilePicPreview"></div>
-
-    <h2>Swipe</h2>
-    <button onclick="showIceBreaker()">Visa fråga</button>
-    <p id="iceBreakerQuestion"></p>
+  <script>
+    function enterChat() {
+      const name = document.getElementById('nickname').value.trim();
+      if (name) {
+        localStorage.setItem('username', name);
+        window.location.href = 'chat.html'; // eller din chatt-sida
+      } else {
+        alert("Skriv in ett nickname först!");
+      }
+    }
+  </script>
     
 </body>
 
-<script type="module" src="script.js"></script>
-<script type="text/javascript" src="script.js"></script>
+<script src="script.js"></script>
 
 </html>
