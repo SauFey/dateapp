@@ -2,36 +2,61 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
-  <title>LunaRoom Chat</title>
+  <title>LunaRoom Chatt</title>
   <script src="/socket.io/socket.io.js"></script>
-  <style>
-    body { font-family: sans-serif; background: #ffe4f0; padding: 2rem; }
-    #chat { border: 2px solid #e91e63; padding: 1rem; border-radius: 20px; max-width: 600px; margin: auto; background: white; }
-    #messages { height: 250px; overflow-y: auto; margin-bottom: 1rem; }
-    input, textarea, button, select {
-      padding: 0.5rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin: 0.2rem;
-      width: 100%;
-    }
-    textarea { resize: none; height: 60px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="chat">
-    <h2 id="welcome">Välkommen till LunaRoom 💬</h2>
-    <p id="roomInfo">Du är nu i Global-rummet</p>
+<body class="chat-body">
+  <img src="heartlogo.png" alt="LunaRoom Logo" class="logo" />
+  <header>
+    <div class="logo">LunaRoom 🌙</div>
+    <div class="online-count">64 online (128 i nätverket)</div>
+  </header>
 
-    <div id="messages"></div>
+  <main class="chat-layout">
 
-    <textarea id="message" placeholder="Skriv ett meddelande..."></textarea>
-    <button onclick="sendMessage()">Skicka</button>
-  </div>
+    <aside class="left-column">
+      <h3>Rum</h3>
+      <ul class="room-list" id="roomList">
+        <li class="active" data-room="Global">Global</li>
+        <li data-room="18+">18+</li>
+        <li data-room="Tech">Tech</li>
+        <li data-room="Hobby">Hobby</li>
+      </ul>
+      <h3>Privata meddelanden</h3>
+      <ul class="private-list" id="privateList">
+        <li>Anna</li>
+        <li>Lisa</li>
+      </ul>
+    </aside>
 
+    <section class="chat-center">
+      <h2>Global</h2>
+      <div id="chatDisplay" class="chat-display"></div>
+      <form id="chatForm" class="chat-form">
+        <textarea id="chatInput" placeholder="Skriv ett meddelande..."></textarea>
+        <button id="sendBtn">Skicka</button>
+      </form>
+    </section>
+
+    <aside class="right-column">
+      <h3>Online just nu</h3>
+      <ul class="member-list" id="memberList"></ul>
+      <ul class="recent-list" id="recentList"></ul>
+      <ul class="member-list">
+        <li>Emma</li>
+        <li>Julia</li>
+      </ul>
+      <h3>Nyss lämnat</h3>
+      <ul class="recent-list">
+        <li>Clara</li>
+        <li>Elin</li>
+      </ul>
+    </aside>
+  </main>
   <script>
     const nickname = localStorage.getItem('username') || 'vän';
-    document.getElementById('welcome').innerText = `Välkommen, ${nickname} 💜`;
 
     const socket = io();
     const room = 'Global';
@@ -41,11 +66,11 @@
     socket.on('message', data => {
       const msg = document.createElement('p');
       msg.innerHTML = `<strong>${data.user}:</strong> ${data.text}`;
-      document.getElementById('messages').appendChild(msg);
-      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+      document.getElementById('chatDisplay').appendChild(msg);
+      document.getElementById('chatDisplay').scrollTop = document.getElementById('chatDisplay').scrollHeight;
     });
 
-    document.getElementById('message').addEventListener('keydown', function (event) {
+    document.getElementById('chatInput').addEventListener('keydown', function (event) {
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         sendMessage();
@@ -53,11 +78,12 @@
     });
 
     function sendMessage() {
-      const text = document.getElementById('message').value.trim();
+      const text = document.getElementById('chatInput').value.trim();
       if (!text) return;
       socket.emit('chatMessage', { user: nickname, text });
-      document.getElementById('message').value = '';
+      document.getElementById('chatInput').value = '';
     }
   </script>
 </body>
+
 </html>

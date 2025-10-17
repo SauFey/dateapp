@@ -207,3 +207,76 @@ window.handleSwipe = function (direction) {
 window.showIceBreaker = function () {
   document.getElementById("icebreakerText").textContent = getIceBreaker();
 }
+
+/*** SOCKET.IO ***/
+const socket = io();
+
+const display = document.getElementById('chatDisplay');
+console.log('Display hittad:', display);
+
+// Hämta användarnamn från localStorage
+const nickname = localStorage.getItem('username') || 'vän';
+const currentRoom = 'Global'; // Vi gör detta dynamiskt i nästa steg
+
+// Anslut till rummet
+socket.emit('joinRoom', { room: currentRoom, nickname });
+
+// Visa meddelanden i chatDisplay
+socket.on('message', data => {
+  const msg = document.createElement('p');
+  msg.innerHTML = `<strong>${data.user}:</strong> ${data.text}`;
+  document.getElementById('chatDisplay').appendChild(msg);
+  document.getElementById('chatDisplay').scrollTop = document.getElementById('chatDisplay').scrollHeight;
+});
+
+// Uppdatera medlem
+socket.on('updateMembers', members => {
+  const list = document.getElementById('memberList');
+  list.innerHTML = '';
+  members.forEach(name => {
+    const li = document.createElement('li');
+    li.textContent = name;
+    list.appendChild(li);
+  });
+});
+
+// Medlem lämnar rum
+socket.on('recentLeft', names => {
+  const list = document.getElementById('recentList');
+  list.innerHTML = '';
+  names.forEach(name => {
+    const li = document.createElement('li');
+    li.textContent = name;
+    list.appendChild(li);
+  });
+});
+
+// Skicka meddelande
+document.getElementById('chatForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const text = document.getElementById('chatInput').value.trim();
+  if (text) {
+    socket.emit('chatMessage', { user: nickname, text });
+    document.getElementById('chatInput').value = '';
+  }
+});
+
+// Byt rum vid klick
+document.querySelectorAll('#roomList li').forEach(li => {
+  li.addEventListener('click', () => {
+    const newRoom = li.dataset.room;
+    socket.emit('joinRoom', { room: newRoom, nickname });
+    document.querySelector('.room-list .active')?.classList.remove('active');
+    li.classList.add('active');
+    document.getElementById('chatDisplay').innerHTML = '';
+  });
+});
+
+// Öppna privat chatt
+document.querySelectorAll('#privateList li').forEach(li => {
+  li.addEventListener('click', () => {
+    const recipient = li.dataset.user;
+    alert(`Privat chatt med ${recipient} (funktion kommer snart!)`);
+    // Här kan du öppna en ny vy eller ruta för privatmeddelanden
+  });
+});

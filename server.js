@@ -1,11 +1,20 @@
-const cors = require('cors');
-const http = require('http');
-const open = require('open');
-const { Server } = require('socket.io');
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import http from 'http';
+import path from 'path';
+import { Server } from 'socket.io';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import open from 'open';
 
-// Detta gör att Express serverar statiska filer från "public"-mappen
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -27,6 +36,7 @@ io.on('connection', socket => {
   });
 
   socket.on('chatMessage', data => {
+    console.log('Meddelande mottaget:', data); // För felsökning
     io.to(socket.room).emit('message', {
       user: data.user,
       text: data.text
