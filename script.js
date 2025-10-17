@@ -1,40 +1,47 @@
+// 📥 DOM-element
 const form = document.getElementById('postForm');
 const input = document.getElementById('postInput');
-if username.username document.getElementById('nickname').value = username.username;
 const list = document.getElementById('postList');
 const welcome = document.getElementById('welcome');
+const nicknameInput = document.getElementById('nickname');
 
-// Hämta användarnamn
+// 🔐 Hämta användarnamn från localStorage
 const username = localStorage.getItem('username');
-if (username && welcome) {
-  welcome.textContent = `Hej ${username}, välkommen tillbaka!`;
+if (username) {
+  if (welcome) {
+    welcome.textContent = `Hej ${username}, välkommen tillbaka!`;
+  }
+  if (nicknameInput) {
+    nicknameInput.value = username;
+  }
 }
 
-// Ladda tidigare inlägg från LocalStorage
+// 📝 Ladda tidigare inlägg
 const savedPosts = JSON.parse(localStorage.getItem('posts')) || [];
 savedPosts.forEach(text => {
   const li = document.createElement('li');
   li.textContent = text;
-  list.appendChild(li);
+  if (list) list.appendChild(li);
 });
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const text = input.value.trim();
-  if (text) {
-    const li = document.createElement('li');
-    li.textContent = text;
-    list.appendChild(li);
+// 📨 Hantera nytt inlägg
+if (form && input && list) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (text) {
+      const li = document.createElement('li');
+      li.textContent = text;
+      list.appendChild(li);
 
-    // Spara till LocalStorage
-    savedPosts.push(text);
-    localStorage.setItem('posts', JSON.stringify(savedPosts));
+      savedPosts.push(text);
+      localStorage.setItem('posts', JSON.stringify(savedPosts));
+      input.value = '';
+    }
+  });
+}
 
-    input.value = '';
-  }
-});
-
-// 🧍 Skapa användarprofil
+// 👤 Skapa användarprofil
 function createUserProfile(name, age, gender, interests) {
   return {
     name,
@@ -50,13 +57,12 @@ function createUserProfile(name, age, gender, interests) {
 function registerUser(username, password) {
   const user = { username, password };
   localStorage.setItem('user_' + username, JSON.stringify(user));
-  console.log('Medlem ' + username + ' är en ny registrerad medlem.');
+  console.log(`Medlem ${username} är en ny registrerad medlem.`);
 }
 
 function loginUser(username, password) {
   const storedUser = localStorage.getItem('user_' + username);
   if (!storedUser) return false;
-
   const user = JSON.parse(storedUser);
   return user.password === password;
 }
@@ -69,9 +75,8 @@ function logout() {
 // 🖼️ Profilbild
 function addProfilePicture(user, imageUrl) {
   user.profilePicture = imageUrl;
-  console.log(user.name + ' har lagt till en profilbild.');
+  console.log(`${user.name} har lagt till en profilbild.`);
 }
-
 
 // 📝 Uppdatera profil
 function updateProfile(username, newInfo) {
@@ -80,7 +85,7 @@ function updateProfile(username, newInfo) {
   const user = JSON.parse(storedUser);
   Object.assign(user, newInfo);
   localStorage.setItem('user_' + username, JSON.stringify(user));
-  console.log(username + ' har uppdaterat sin profil.');
+  console.log(`${username} har uppdaterat sin profil.`);
 }
 
 // 💘 Matchning
@@ -94,15 +99,15 @@ function findMatches(user, potentialMatches) {
 }
 
 function displayMatches(user) {
-  console.log('Matches for ${user.name}:');
+  console.log(`Matches for ${user.name}:`);
   user.matches.forEach(match => {
-    console.log('- ${match.name}, Age: ${match.age}, Interests: ${match.interests.join(', ')}');
+    console.log(`- ${match.name}, Age: ${match.age}, Interests: ${match.interests.join(', ')}`);
   });
 }
 
 // 📬 Meddelanden
 function sendMessage(sender, receiver, message) {
-  console.log('Message from ${sender.name} to ${receiver.name}: ${message}');
+  console.log(`Message from ${sender.name} to ${receiver.name}: ${message}`);
 }
 
 // 🔍 Filtrera användare
@@ -137,9 +142,9 @@ function getIceBreaker() {
 function swipe(user, potentialMatch, direction) {
   if (direction === 'right') {
     user.matches.push(potentialMatch.name);
-    console.log('${user.name} gillade ${potentialMatch.name} ❤️');
+    console.log(`${user.name} gillade ${potentialMatch.name} ❤️`);
   } else {
-    console.log('${user.name} svepte bort ${potentialMatch.name} 👋');
+    console.log(`${user.name} svepte bort ${potentialMatch.name} 👋`);
   }
 }
 
@@ -188,7 +193,7 @@ window.handleAddImage = function () {
   if (currentUser) {
     addProfilePicture(currentUser, url);
     saveProfile(currentUser);
-    document.getElementById("imagePreview").innerHTML = '<img src="${url}" alt="Profilbild" />';
+    document.getElementById("imagePreview").innerHTML = `<img src="${url}" alt="Profilbild" />`;
   }
 }
 
@@ -202,3 +207,76 @@ window.handleSwipe = function (direction) {
 window.showIceBreaker = function () {
   document.getElementById("icebreakerText").textContent = getIceBreaker();
 }
+
+/*** SOCKET.IO ***/
+const socket = io();
+
+const display = document.getElementById('chatDisplay');
+console.log('Display hittad:', display);
+
+// Hämta användarnamn från localStorage
+const nickname = localStorage.getItem('username') || 'vän';
+const currentRoom = 'Global'; // Vi gör detta dynamiskt i nästa steg
+
+// Anslut till rummet
+socket.emit('joinRoom', { room: currentRoom, nickname });
+
+// Visa meddelanden i chatDisplay
+socket.on('message', data => {
+  const msg = document.createElement('p');
+  msg.innerHTML = `<strong>${data.user}:</strong> ${data.text}`;
+  document.getElementById('chatDisplay').appendChild(msg);
+  document.getElementById('chatDisplay').scrollTop = document.getElementById('chatDisplay').scrollHeight;
+});
+
+// Uppdatera medlem
+socket.on('updateMembers', members => {
+  const list = document.getElementById('memberList');
+  list.innerHTML = '';
+  members.forEach(name => {
+    const li = document.createElement('li');
+    li.textContent = name;
+    list.appendChild(li);
+  });
+});
+
+// Medlem lämnar rum
+socket.on('recentLeft', names => {
+  const list = document.getElementById('recentList');
+  list.innerHTML = '';
+  names.forEach(name => {
+    const li = document.createElement('li');
+    li.textContent = name;
+    list.appendChild(li);
+  });
+});
+
+// Skicka meddelande
+document.getElementById('chatForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const text = document.getElementById('chatInput').value.trim();
+  if (text) {
+    socket.emit('chatMessage', { user: nickname, text });
+    document.getElementById('chatInput').value = '';
+  }
+});
+
+// Byt rum vid klick
+document.querySelectorAll('#roomList li').forEach(li => {
+  li.addEventListener('click', () => {
+    const newRoom = li.dataset.room;
+    socket.emit('joinRoom', { room: newRoom, nickname });
+    document.querySelector('.room-list .active')?.classList.remove('active');
+    li.classList.add('active');
+    document.getElementById('chatDisplay').innerHTML = '';
+  });
+});
+
+// Öppna privat chatt
+document.querySelectorAll('#privateList li').forEach(li => {
+  li.addEventListener('click', () => {
+    const recipient = li.dataset.user;
+    alert(`Privat chatt med ${recipient} (funktion kommer snart!)`);
+    // Här kan du öppna en ny vy eller ruta för privatmeddelanden
+  });
+});
